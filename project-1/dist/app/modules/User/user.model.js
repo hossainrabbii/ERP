@@ -1,4 +1,6 @@
 import { model, Schema } from "mongoose";
+import bcrypt from "bcrypt";
+import config from "../../config/index.js";
 const userSchema = new Schema({
     email: {
         type: String,
@@ -8,6 +10,7 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true,
+        minLength: [6, "Password must be at least 6 characters long!"],
     },
     role: {
         type: String,
@@ -18,6 +21,16 @@ const userSchema = new Schema({
         enum: ["joined", "block"],
     },
     isDeleted: { type: Boolean, default: false },
-}, { autoCreate: false, timestamps: true });
+}, { timestamps: true });
+// before save into DB
+userSchema.pre("save", async function (next) {
+    const user = this;
+    user.password = bcrypt.hashSync(user.password, Number(config.bcrypt_salting));
+    next();
+});
+userSchema.post("save", function (userData, next) {
+    userData.password = "";
+    next();
+});
 export const User = model("User", userSchema);
 //# sourceMappingURL=user.model.js.map

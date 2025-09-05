@@ -1,5 +1,5 @@
-import type { RequestHandler } from "express";
+import type { NextFunction, Request, Response } from "express";
 export declare const userControllers: {
-    createUser: RequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
+    createUser: (req: Request, res: Response, next: NextFunction) => void;
 };
 //# sourceMappingURL=user.controller.d.ts.map
