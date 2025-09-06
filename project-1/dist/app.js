@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import { userRoutes } from "./app/modules/User/user.route.js";
 import globaErrorHandler from "./app/middlewares/globalErrorHandler.js";
 import notFound from "./app/middlewares/notFound.js";
 import routes from "./app/routes/routes.js";

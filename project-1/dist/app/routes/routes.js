@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { userRoutes } from "../modules/User/user.route.js";
+import { companyRoutes } from "../modules/Company/company.route.js";
 const routes = Router();
 const allRoutes = [
     {
@@ -8,7 +9,7 @@ const allRoutes = [
     },
     {
         path: "/company",
-        route: userRoutes,
+        route: companyRoutes,
     },
 ];
 allRoutes.forEach((route) => routes.use(route.path, route.route));
