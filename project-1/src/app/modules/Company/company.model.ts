@@ -7,7 +7,10 @@ const companyShema = new Schema<TCompany>(
     companyName: {
       type: String,
       required: [true, "Company name required."],
-      unique: [true, "Company name already registered, please chose another name."],
+      unique: [
+        true,
+        "Company name already registered, please chose another name.",
+      ],
       minLength: [2, "Company name be at least 2 characters long."],
     },
     ownerMailId: {
@@ -19,8 +22,8 @@ const companyShema = new Schema<TCompany>(
     isDeleted: { type: Boolean, default: false },
     status: {
       type: String,
-      enum: ["running", "paused"],
-      default: "running",
+      enum: ["active", "inactive"],
+      default: "active",
     },
   },
   { timestamps: true }

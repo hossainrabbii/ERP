@@ -5,5 +5,10 @@ export declare const userServices: {
     } & {
         __v: number;
     }>;
+    getAllUserFromDB: () => Promise<(import("mongoose").Document<unknown, {}, TUser, {}, {}> & TUser & {
+        _id: import("mongoose").Types.ObjectId;
+    } & {
+        __v: number;
+    })[]>;
 };
 //# sourceMappingURL=user.service.d.ts.map

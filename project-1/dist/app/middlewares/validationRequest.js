@@ -1,7 +1,7 @@
 const validationRequest = (schema) => {
     return async (req, res, next) => {
         try {
-            console.log(req.body);
+            console.log("From validation Request: ", req.body);
             await schema.parseAsync(req.body);
             next();
         }

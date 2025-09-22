@@ -13,7 +13,18 @@ const createUser = catchAsync(async (req, res) => {
         data: result,
     });
 });
+// get all use
+const getAllUser = async (req, res) => {
+    const result = await userServices.getAllUserFromDB();
+    // console.log(result)
+    sendResponse.sendSuccessResponse(res, {
+        statusCode: status.OK,
+        message: "All user fetched successfully.",
+        data: result,
+    });
+};
 export const userControllers = {
     createUser,
+    getAllUser,
 };
 //# sourceMappingURL=user.controller.js.map

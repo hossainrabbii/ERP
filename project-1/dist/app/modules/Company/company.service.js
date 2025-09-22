@@ -2,7 +2,6 @@ import { User } from "../User/user.model.js";
 import { Company } from "./company.model.js";
 // create company into DB
 const createCompanyIntoDB = async (payload) => {
-    console.log(payload);
     // user check exits
     const owner = await User.findOne({ email: payload.ownerMailId });
     if (!owner) {

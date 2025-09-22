@@ -8,6 +8,14 @@ const createUserIntoDB = async (userData: TUser) => {
   return newUser;
 };
 
+// get all use
+const getAllUserFromDB = async () => {
+  const allUser = await User.find({ isDeleted: false });
+  // console.log("Services", allUser);
+
+  return allUser;
+};
 export const userServices = {
   createUserIntoDB,
+  getAllUserFromDB,
 };

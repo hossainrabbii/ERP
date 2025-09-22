@@ -1,7 +1,9 @@
 import z from "zod";
 const createUserValidationSchema = z.object({
     user: z.object({
-        email: z.string().email(),
+        email: z.email({
+            pattern: /^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9\-]*\.)+[a-z]{2,}$/i,
+        }),
         password: z
             .string({
             error: (issue) => issue.input === undefined ? "This field is required" : "Not a string",
