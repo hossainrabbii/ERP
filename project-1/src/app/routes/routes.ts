@@ -5,6 +5,7 @@ import { departmentRoutes } from "../modules/Department/department.route.js";
 import { invitationRoutes } from "../modules/Invitation/invitation.route.js";
 import { taskRoutes } from "../modules/Task/task.route.js";
 import { employeeRoutes } from "../modules/Employee/employee.route.js";
+import { authRoutes } from "../modules/Auth/auth.route.js";
 
 const routes = Router();
 
@@ -32,6 +33,10 @@ const allRoutes = [
   {
     path: "/employee",
     route: employeeRoutes,
+  },
+  {
+    path: "/auth",
+    route: authRoutes,
   },
 ];
 

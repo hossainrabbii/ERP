@@ -6,7 +6,7 @@ const createUserIntoDB = async (userData) => {
     return newUser;
 };
 // get all use
-const getAllUserFromDB = async () => {
+const getAllUserFromDB = async (query) => {
     const allUser = await User.find({ isDeleted: false });
     // console.log("Services", allUser);
     return allUser;

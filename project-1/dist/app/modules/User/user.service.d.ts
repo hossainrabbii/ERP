@@ -5,7 +5,7 @@ export declare const userServices: {
     } & {
         __v: number;
     }>;
-    getAllUserFromDB: () => Promise<(import("mongoose").Document<unknown, {}, TUser, {}, {}> & TUser & {
+    getAllUserFromDB: (query: Record<string, unknown>) => Promise<(import("mongoose").Document<unknown, {}, TUser, {}, {}> & TUser & {
         _id: import("mongoose").Types.ObjectId;
     } & {
         __v: number;

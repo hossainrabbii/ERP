@@ -9,7 +9,7 @@ const createUserIntoDB = async (userData: TUser) => {
 };
 
 // get all use
-const getAllUserFromDB = async () => {
+const getAllUserFromDB = async (query: Record<string, unknown>) => {
   const allUser = await User.find({ isDeleted: false });
   // console.log("Services", allUser);
 

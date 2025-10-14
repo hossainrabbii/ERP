@@ -1,0 +1,1 @@
+{"version":3,"file":"handleCastError.d.ts","sourceRoot":"","sources":["../../../src/app/errors/handleCastError.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,QAAQ,MAAM,UAAU,CAAC;AACrC,OAAO,KAAK,EAAgB,mBAAmB,EAAE,MAAM,uBAAuB,CAAC;AAE/E,eAAO,MAAM,eAAe,GAC1B,OAAO,QAAQ,CAAC,KAAK,CAAC,SAAS,KAC9B,mBAaF,CAAC"}
