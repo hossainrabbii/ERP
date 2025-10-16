@@ -27,8 +27,24 @@ const changePassword = async (req, res) => {
         data: result,
     });
 };
+// refresh token
+const refreshToken = async (req, res) => {
+    // console.log(req.authorizedUser, req.body);
+    // const { ...passwordData } = req?.body;
+    // const result = await authServices.changePassword(
+    //   req.authorizedUser,
+    //   passwordData
+    // );
+    const result = await authServices.refreshToken(req?.cookies?.refreshToken);
+    sendResponse.sendSuccessResponse(res, {
+        statusCode: status.OK,
+        message: "New acces token retrieved successfully.",
+        data: result,
+    });
+};
 export const authController = {
     loginUser,
     changePassword,
+    refreshToken,
 };
 //# sourceMappingURL=auth.controller.js.map

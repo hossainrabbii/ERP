@@ -8,5 +8,6 @@ export declare const authServices: {
     changePassword: (authorizedUser: JwtPayload, payload: TChangePassword) => Promise<{
         accessToken: string;
     }>;
+    refreshToken: (token: string) => Promise<string>;
 };
 //# sourceMappingURL=auth.service.d.ts.map

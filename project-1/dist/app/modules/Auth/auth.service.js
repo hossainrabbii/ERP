@@ -5,6 +5,7 @@ import AppError from "../../errors/AppError.js";
 import status from "http-status";
 import config from "../../config/index.js";
 import { createJWTToken } from "./auth.utils.js";
+// login user
 const loginUser = async (payload) => {
     //  checking if user exits
     const isExists = await User.findOne({ email: payload?.email }).select("+password");
@@ -82,8 +83,35 @@ const changePassword = async (authorizedUser, payload) => {
         throw new AppError(status.NOT_ACCEPTABLE, "Current password does not match");
     }
 };
+// refresh token
+const refreshToken = async (token) => {
+    if (!token) {
+        console.log("no token.");
+        throw new AppError(status.UNAUTHORIZED, "Unauthorized user.");
+    }
+    const decode = jwt.verify(token, config.jwt_refresh_secret);
+    const { email, iat } = decode;
+    // is User exists
+    const user = await User.isUserExistsByEmailId(email);
+    // if user not exists
+    if (!user) {
+        throw new AppError(status.UNAUTHORIZED, "User does not exists.");
+    }
+    // if JWT Issued Before Password Changed
+    if (user.passwordChangedAt &&
+        User.isJWTIssuedBeforePasswordChanged(user.passwordChangedAt, iat)) {
+        throw new AppError(status.UNAUTHORIZED, "Unauthorized user.");
+    }
+    const jwtPayload = {
+        email: user?.email,
+        role: user?.role,
+    };
+    const accessToken = createJWTToken(jwtPayload, config.jwt_access_secret, config.jwt_access_expiredin);
+    return accessToken;
+};
 export const authServices = {
     loginUser,
     changePassword,
+    refreshToken,
 };
 //# sourceMappingURL=auth.service.js.map

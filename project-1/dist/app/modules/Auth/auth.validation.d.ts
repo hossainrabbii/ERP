@@ -8,5 +8,10 @@ export declare const authValidation: {
         currentPassword: z.ZodString;
         newPassword: z.ZodString;
     }, z.z.core.$strip>;
+    refreshTokenValidationSchema: z.ZodObject<{
+        cookies: z.ZodObject<{
+            refreshToken: z.ZodString;
+        }, z.z.core.$strip>;
+    }, z.z.core.$strip>;
 };
 //# sourceMappingURL=auth.validation.d.ts.map

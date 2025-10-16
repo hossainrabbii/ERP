@@ -19,8 +19,9 @@ const createUser = catchAsync(async (req, res) => {
 
 // get all use
 const getAllUser = async (req: Request, res: Response) => {
+
   const result = await userServices.getAllUserFromDB(req.query);
-  // console.log(result)
+
   sendResponse.sendSuccessResponse(res, {
     statusCode: status.OK,
     message: "All user fetched successfully.",

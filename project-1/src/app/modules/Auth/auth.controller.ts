@@ -35,7 +35,25 @@ const changePassword: RequestHandler = async (req, res) => {
   });
 };
 
+// refresh token
+const refreshToken: RequestHandler = async (req, res) => {
+  // console.log(req.authorizedUser, req.body);
+  // const { ...passwordData } = req?.body;
+  // const result = await authServices.changePassword(
+  //   req.authorizedUser,
+  //   passwordData
+  // );
+
+  const result = await authServices.refreshToken(req?.cookies?.refreshToken);
+  sendResponse.sendSuccessResponse(res, {
+    statusCode: status.OK,
+    message: "New acces token retrieved successfully.",
+    data: result,
+  });
+};
+
 export const authController = {
   loginUser,
   changePassword,
+  refreshToken,
 };

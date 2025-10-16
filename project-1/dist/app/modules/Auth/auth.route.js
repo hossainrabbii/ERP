@@ -7,5 +7,6 @@ import { USER_ROLE } from "../User/user.constant.js";
 const router = Router();
 router.post("/login", validationRequest(authValidation.loginValidationSchema), authController.loginUser);
 router.post("/change-password", auth(USER_ROLE.admin, USER_ROLE.employee, USER_ROLE.user), validationRequest(authValidation.changePasswordValidationSchema), authController.changePassword);
+router.post("/refresh-token", validationRequest(authValidation.refreshTokenValidationSchema), authController.refreshToken);
 export const authRoutes = router;
 //# sourceMappingURL=auth.route.js.map

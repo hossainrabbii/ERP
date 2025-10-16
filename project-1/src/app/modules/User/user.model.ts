@@ -14,7 +14,7 @@ const userSchema = new Schema<TUser>(
       type: String,
       required: true,
       minLength: [6, "Password must be at least 6 characters long!"],
-      select: true,
+      select: 0,
     },
     passwordChangedAt: {
       type: Date,
