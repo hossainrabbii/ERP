@@ -22,7 +22,7 @@ const companyShema = new Schema<TCompany>(
     isDeleted: { type: Boolean, default: false },
     status: {
       type: String,
-      enum: ["active", "inactive"],
+      enum: ["active", "block"],
       default: "active",
     },
   },

@@ -11,15 +11,20 @@ const userSchema = new Schema({
         type: String,
         required: true,
         minLength: [6, "Password must be at least 6 characters long!"],
+        select: true,
+    },
+    passwordChangedAt: {
+        type: Date,
     },
     role: {
         type: String,
-        enum: ["admin", "employee"],
-        default: "admin",
+        enum: ["user", "admin", "employee"],
+        default: "user",
     },
     status: {
         type: String,
-        enum: ["joined", "block"],
+        enum: ["active", "block"],
+        default: "active",
     },
     isDeleted: { type: Boolean, default: false },
 }, { timestamps: true });
@@ -33,5 +38,19 @@ userSchema.post("save", function (userData, next) {
     userData.password = "";
     next();
 });
+// if user exist
+userSchema.statics.isUserExistsByEmailId = async function (email) {
+    return await User.findOne({ email }).select("+password");
+};
+// is password change time is greater than issues time
+userSchema.statics.isJWTIssuedBeforePasswordChanged = function (passwordChangedTimestamp, jwtIssuedTimestamp) {
+    if (!passwordChangedTimestamp || !jwtIssuedTimestamp) {
+        // No change detected or invalid timestamps — token is valid
+        return false;
+    }
+    // make UTC to second
+    const passwordChangedTime = new Date(passwordChangedTimestamp).getTime() / 1000;
+    return passwordChangedTime > jwtIssuedTimestamp;
+};
 export const User = model("User", userSchema);
 //# sourceMappingURL=user.model.js.map

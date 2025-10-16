@@ -4,5 +4,9 @@ export declare const authValidation: {
         email: z.ZodString;
         password: z.ZodString;
     }, z.z.core.$strip>;
+    changePasswordValidationSchema: z.ZodObject<{
+        currentPassword: z.ZodString;
+        newPassword: z.ZodString;
+    }, z.z.core.$strip>;
 };
 //# sourceMappingURL=auth.validation.d.ts.map

@@ -1,14 +1,74 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { type JwtPayload } from "jsonwebtoken";
 import { User } from "../User/user.model.js";
-import type { TLogin } from "./auth.interface.js";
+import type { TChangePassword, TLogin } from "./auth.interface.js";
 import AppError from "../../errors/AppError.js";
 import status from "http-status";
 import config from "../../config/index.js";
+import { createJWTToken } from "./auth.utils.js";
 
 const loginUser = async (payload: TLogin) => {
   //  checking if user exits
-  const isExists = await User.findOne({ email: payload?.email });
+  const isExists = await User.findOne({ email: payload?.email }).select(
+    "+password"
+  );
+  if (!isExists) {
+    throw new Error("User is not found.");
+  }
+
+  // checking if user deleted
+  if (isExists?.isDeleted) {
+    throw new AppError(status.NOT_FOUND, "User is removed.");
+  }
+
+  // if blocked
+  if (isExists?.status === "block") {
+    throw new AppError(status.NOT_FOUND, "User is blocked.");
+  }
+
+  // checking if the password is correct
+  const isPasswordMatch = await bcrypt.compare(
+    payload?.password,
+    isExists?.password
+  );
+
+  if (isPasswordMatch) {
+    //login
+    const jwtPayload = {
+      email: isExists?.email,
+      role: isExists?.role,
+    };
+    const accessToken = createJWTToken(
+      jwtPayload,
+      config.jwt_access_secret as string,
+      config.jwt_access_expiredin as string
+    );
+    const refreshToken = createJWTToken(
+      jwtPayload,
+      config.jwt_refresh_secret as string,
+      config.jwt_refresh_expiredin as string
+    );
+
+    return {
+      accessToken,
+      refreshToken,
+    };
+  } else {
+    throw new AppError(status.NOT_ACCEPTABLE, "Password does not match");
+  }
+};
+
+// change password
+const changePassword = async (
+  authorizedUser: JwtPayload,
+  payload: TChangePassword
+) => {
+  console.log(authorizedUser, payload);
+  //  checking if user exits
+  const isExists = await User.findOne({ email: authorizedUser?.email }).select(
+    "+password"
+  );
+
   if (!isExists) {
     throw new Error("User is not found.");
   }
@@ -20,23 +80,48 @@ const loginUser = async (payload: TLogin) => {
     throw new AppError(status.NOT_FOUND, "User is removed.");
   }
 
+  // if blocked
+  if (isExists?.status === "block") {
+    throw new AppError(status.NOT_FOUND, "User is blocked.");
+  }
   // checking if the password is correct
   const isPasswordMatch = await bcrypt.compare(
-    payload?.password,
+    payload?.currentPassword,
     isExists?.password
   );
 
+  console.log(isPasswordMatch);
   if (isPasswordMatch) {
     //login
 
-    const JwtPayload = {
+    const jwtPayload = {
       email: isExists?.email,
+      role: isExists?.role,
     };
-    const accessToken = jwt.sign(
-      JwtPayload,
+    const accessToken = createJWTToken(
+      jwtPayload,
       config.jwt_access_secret as string,
+      config.jwt_access_expiredin as string
+    );
+    const refreshToken = createJWTToken(
+      jwtPayload,
+      config.jwt_refresh_secret as string,
+      config.jwt_refresh_expiredin as string
+    );
+
+    const newHashedPassword = await bcrypt.hash(
+      payload?.newPassword,
+      Number(config.bcrypt_salting)
+    );
+
+    await User.findOneAndUpdate(
       {
-        expiresIn: "3d",
+        email: isExists?.email,
+        role: isExists?.role,
+      },
+      {
+        password: newHashedPassword,
+        passwordChangedAt: new Date(),
       }
     );
 
@@ -44,10 +129,14 @@ const loginUser = async (payload: TLogin) => {
       accessToken,
     };
   } else {
-    console.log("Un-success");
+    throw new AppError(
+      status.NOT_ACCEPTABLE,
+      "Current password does not match"
+    );
   }
 };
 
 export const authServices = {
   loginUser,
+  changePassword,
 };

@@ -73,7 +73,7 @@ const globaErrorHandler = (error, req, res, next) => {
         message: error.message || "Something went wrong!",
         errorSources,
         error,
-        stack: config.NODE_ENV == "development" ? error?.stack : null,
+        stack: config.NODE_ENV === "development" ? error?.stack : null,
     });
 };
 export default globaErrorHandler;

@@ -8,6 +8,9 @@ export default {
     mongodbUrl: process.env.MONGODB_URL,
     bcrypt_salting: process.env.BCRYPT_SALTING,
     jwt_access_secret: process.env.JWT_ACCESS_SECRET,
+    jwt_refresh_secret: process.env.JWT_REFRESH_SECRET,
+    jwt_access_expiredin: process.env.JWT_ACCESS_EXPIREDIN,
+    jwt_refresh_expiredin: process.env.JWT_REFRESH_EXPIREDIN,
 };
 // process.env.PORT = “get the variable (from .env or system env) in a consistent way”.
 //# sourceMappingURL=index.js.map

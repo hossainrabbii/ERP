@@ -5,6 +5,6 @@ export type TCompany = {
     industry: string;
     ownerUserId?: Types.ObjectId;
     isDeleted?: boolean;
-    status?: "running" | "paused";
+    status: "active" | "block";
 };
 //# sourceMappingURL=company.interface.d.ts.map

@@ -3,6 +3,7 @@ import { userControllers } from "./user.controller.js";
 import validationRequest from "../../middlewares/validationRequest.js";
 import { userValidation } from "./user.validation.js";
 import auth from "../../middlewares/auth.js";
+import {USER_ROLE} from './user.constant.js';
 const router = express.Router();
 
 router.post(
@@ -11,6 +12,6 @@ router.post(
   userControllers.createUser
 );
 
-router.get("/", auth(), userControllers.getAllUser);
+router.get("/", auth(USER_ROLE.user), userControllers.getAllUser);
 
 export const userRoutes = router;
