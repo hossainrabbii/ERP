@@ -3,4 +3,3 @@ server/.env
 
 # Other ignores
 server/node_modules
-*.log
