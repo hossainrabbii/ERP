@@ -1,1 +1,7 @@
+
+# Ignore the environment file
 .env
+
+# Other ignores
+/node_modules
+*.log
