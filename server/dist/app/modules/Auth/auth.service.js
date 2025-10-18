@@ -139,13 +139,16 @@ const forgetPassword = async (email) => {
     }
     return resetLink;
 };
-const resetPasswordIntoDB = async (newPassword, token) => {
+const resetPasswordIntoDB = async (payload, token) => {
     if (!token) {
         console.log("no token.");
         throw new AppError(status.UNAUTHORIZED, "Unauthorized user.");
     }
     const decode = jwt.verify(token, config.jwt_access_secret);
     const { email, role, iat } = decode;
+    if (payload?.email !== email) {
+        throw new AppError(status.UNAUTHORIZED, "Unauthorized user.");
+    }
     // is User exists
     const user = await User.isUserExistsByEmailId(email);
     // if user not exists
@@ -160,7 +163,7 @@ const resetPasswordIntoDB = async (newPassword, token) => {
     if (user?.status === "block") {
         throw new AppError(status.NOT_FOUND, "User is blocked.");
     }
-    const newHashedPassword = await bcrypt.hash(newPassword, Number(config.bcrypt_salting));
+    const newHashedPassword = await bcrypt.hash(payload?.newPassword, Number(config.bcrypt_salting));
     await User.findOneAndUpdate({
         email: user?.email,
         role: user?.role,

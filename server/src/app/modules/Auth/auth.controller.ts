@@ -64,15 +64,14 @@ const forgetPassword: RequestHandler = async (req, res) => {
 
 // reset password
 const resetPassword: RequestHandler = async (req, res) => {
-  console.log(req.headers.authorization);
-  const result = await authServices.resetPasswordIntoDB(
-    req?.body?.newPassword,
+  await authServices.resetPasswordIntoDB(
+    req?.body,
     req?.headers?.authorization
   );
 
   sendResponse.sendSuccessResponse(res, {
     statusCode: status.OK,
-    message: "Password reset is successful.",
+    message: "Password reset successfully.",
     data: null,
   });
 };
