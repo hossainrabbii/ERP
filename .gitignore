@@ -1,7 +1,7 @@
 
 # Ignore the environment file
-.env
+server/.env
 
 # Other ignores
-/node_modules
+server/node_modules
 *.log
