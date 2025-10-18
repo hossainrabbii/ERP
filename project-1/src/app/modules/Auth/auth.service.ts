@@ -6,6 +6,7 @@ import AppError from "../../errors/AppError.js";
 import status from "http-status";
 import config from "../../config/index.js";
 import { createJWTToken } from "./auth.utils.js";
+import { sendMail } from "../../utils/sendMail.js";
 
 // login user
 const loginUser = async (payload: TLogin) => {
@@ -91,7 +92,6 @@ const changePassword = async (
     isExists?.password
   );
 
-  console.log(isPasswordMatch);
   if (isPasswordMatch) {
     //login
 
@@ -178,8 +178,100 @@ const refreshToken = async (token: string) => {
   );
   return accessToken;
 };
+
+// forget password
+
+const forgetPassword = async (email: string) => {
+  //  checking if user exits
+  const isExists = await User.findOne({ email: email }).select("+password");
+  if (!isExists) {
+    throw new Error("User is not found.");
+  }
+
+  // checking if user deleted
+  if (isExists?.isDeleted) {
+    throw new AppError(status.NOT_FOUND, "User is removed.");
+  }
+
+  // if blocked
+  if (isExists?.status === "block") {
+    throw new AppError(status.NOT_FOUND, "User is blocked.");
+  }
+  const jwtPayload = {
+    email: isExists?.email,
+    role: isExists?.role,
+  };
+  const resetToken = createJWTToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_reset_token_expiredin
+  );
+
+  const resetLink = `${config.reset_password_ui_link}?email=${isExists?.email}&token=${resetToken}`;
+
+  try {
+    await sendMail(isExists?.email, resetLink);
+    console.log("Reset mail sent successfully");
+  } catch (error) {
+    console.error("Error sending reset email:", error);
+  }
+
+  return resetLink;
+};
+
+const resetPasswordIntoDB = async (
+  newPassword: string,
+  token: string | undefined
+) => {
+  if (!token) {
+    console.log("no token.");
+    throw new AppError(status.UNAUTHORIZED, "Unauthorized user.");
+  }
+
+  const decode = jwt.verify(
+    token,
+    config.jwt_access_secret as string
+  ) as JwtPayload;
+
+  const { email, role, iat } = decode;
+
+  // is User exists
+  const user = await User.isUserExistsByEmailId(email);
+
+  // if user not exists
+  if (!user) {
+    throw new AppError(status.UNAUTHORIZED, "User does not exists.");
+  }
+
+  // checking if user deleted
+  if (user?.isDeleted) {
+    throw new AppError(status.NOT_FOUND, "User is removed.");
+  }
+
+  // if blocked
+  if (user?.status === "block") {
+    throw new AppError(status.NOT_FOUND, "User is blocked.");
+  }
+  const newHashedPassword = await bcrypt.hash(
+    newPassword,
+    Number(config.bcrypt_salting)
+  );
+
+  await User.findOneAndUpdate(
+    {
+      email: user?.email,
+      role: user?.role,
+    },
+    {
+      password: newHashedPassword,
+      passwordChangedAt: new Date(),
+    }
+  );
+};
 export const authServices = {
   loginUser,
   changePassword,
   refreshToken,
+  forgetPassword,
+  resetPasswordIntoDB,
 };

@@ -7,6 +7,8 @@ declare const _default: {
     jwt_refresh_secret: string | undefined;
     jwt_access_expiredin: string | undefined;
     jwt_refresh_expiredin: string | undefined;
+    jwt_reset_token_expiredin: string | undefined;
+    reset_password_ui_link: string | undefined;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

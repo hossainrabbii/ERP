@@ -9,5 +9,7 @@ export declare const authServices: {
         accessToken: string;
     }>;
     refreshToken: (token: string) => Promise<string>;
+    forgetPassword: (email: string) => Promise<string>;
+    resetPasswordIntoDB: (newPassword: string, token: string | undefined) => Promise<void>;
 };
 //# sourceMappingURL=auth.service.d.ts.map

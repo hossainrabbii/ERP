@@ -47,8 +47,33 @@ const refreshToken: RequestHandler = async (req, res) => {
   const result = await authServices.refreshToken(req?.cookies?.refreshToken);
   sendResponse.sendSuccessResponse(res, {
     statusCode: status.OK,
-    message: "New acces token retrieved successfully.",
+    message: "New access token retrieved successfully.",
     data: result,
+  });
+};
+
+// forget password
+const forgetPassword: RequestHandler = async (req, res) => {
+  const result = await authServices.forgetPassword(req?.body?.email);
+  sendResponse.sendSuccessResponse(res, {
+    statusCode: status.OK,
+    message: "Reset password link is generated successfully.",
+    data: result,
+  });
+};
+
+// reset password
+const resetPassword: RequestHandler = async (req, res) => {
+  console.log(req.headers.authorization);
+  const result = await authServices.resetPasswordIntoDB(
+    req?.body?.newPassword,
+    req?.headers?.authorization
+  );
+
+  sendResponse.sendSuccessResponse(res, {
+    statusCode: status.OK,
+    message: "Password reset is successful.",
+    data: null,
   });
 };
 
@@ -56,4 +81,6 @@ export const authController = {
   loginUser,
   changePassword,
   refreshToken,
+  forgetPassword,
+  resetPassword,
 };

@@ -6,7 +6,8 @@ import status from "http-status";
 // same as below
 const createUser = catchAsync(async (req, res) => {
     const { user } = req.body;
-    const result = await userServices.createUserIntoDB(user);
+    console.log(user);
+    const result = await userServices.createUserIntoDB(req.body);
     sendResponse.sendSuccessResponse(res, {
         statusCode: status.OK,
         message: "Your account is created successfully",

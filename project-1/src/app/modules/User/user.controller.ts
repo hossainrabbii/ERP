@@ -9,7 +9,9 @@ import status from "http-status";
 
 const createUser = catchAsync(async (req, res) => {
   const { user } = req.body;
-  const result = await userServices.createUserIntoDB(user);
+
+  console.log(user);
+  const result = await userServices.createUserIntoDB(req.body);
   sendResponse.sendSuccessResponse(res, {
     statusCode: status.OK,
     message: "Your account is created successfully",
@@ -19,7 +21,6 @@ const createUser = catchAsync(async (req, res) => {
 
 // get all use
 const getAllUser = async (req: Request, res: Response) => {
-
   const result = await userServices.getAllUserFromDB(req.query);
 
   sendResponse.sendSuccessResponse(res, {
